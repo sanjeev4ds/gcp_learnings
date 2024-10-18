@@ -89,3 +89,34 @@ III. Create dataset & table via CLI (bq tool)-
     -- description "This is my table" \
     <dataset_id>.<table_name> \
   year:string, col1:string, col2:Int64, data_value:float64
+
+IV. Create via python programming (using API client)-
+
+file: bq_create_dataset_table_api.py-->
+
+from google.cloud import bigquery
+client = bigquery.client()
+
+dataset_id = "{}.demo_dataset_api".format(client.project)
+
+dataset= bigquery.Dataset(dataset_id)
+dataset.location = "asia-south1"
+
+dataset = client.create_dataset(dataset, timeout=30)
+print("create dataset {}.{}".format(client.project, dataset.dataset_id))
+
+table_id = "<project_id>.<dataset_id>.<table_name>"
+schema= [
+  bigquery.SchemaField("year","string",mode="NULLABLE"),
+  bigquery.SchemaField("col1","string",mode="NULLABLE"),
+  bigquery.SchemaField("col2","Int64", mode="NULLABLE"),
+  bugquery.SchemaField("data_value","float64",mode="NULLABLE")
+]
+
+table = bigquery.Table(table_id, schema=schema)
+table = client.create_table(table) #make an API request
+
+print("create table {}.{}.{}".format(table.project, table.dataset_id, table.table_id)
+
+##from cloud shell:
+run>  python3 bq_create_dataset_table_api.py
