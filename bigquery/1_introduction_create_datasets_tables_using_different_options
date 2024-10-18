@@ -1,0 +1,91 @@
+Session 1:
+
+GCP Big query-
+
+What is big query?
+- Big query is Google cloud's fully managed, petabyte-scale and cost effective analytical datawarehouse.
+- Run analytics over large amount of data, both and near real time.
+- Supports batch and streaming loads.
+- No infrastructure to setup and manage.
+- Intract primarily with SQL, 2011 standard data.
+- Support structured and semi-structured data.
+
+Why big query?
+- Serverless & auto-scalable.
+- Bug Query runs blazng fast sql queries, powerful streaming & real time analytcs capability.
+- Completely focus on analyzing data to get meaningful insights, no administration required.
+- Easily and securely share insights within organization and beyond as datasets, queries, spreadsheets and reports.
+- Build and operationalize machine learning solution with SQL.
+- Data encryption by default and efficient access control mechanism.
+- Felxible pricing model, on demand and flat rate.
+
+Accessing Big query- required permissions and roles-
+- BQ's required roles and permissions managed by IAM.
+- Permissions can be granted to individual users, groups and service accounts.
+- Access can be granted to BQ on following hierarchy-
+  - Organization or Google cloud project level.
+  - Dataset level
+  - Table or view level.
+- Project and dataset level roles
+  - Viewer (dataset->data viewer)
+  - Editor (dataset->data editor)
+  - Owner (dataset->data owner)
+
+Interacting with Big Query-
+- Web console- query editor
+- Command line (bq tool)
+- API client libraries
+
+BigQuery API client libraries-
+- Provides programmatic access to BQ.
+- Query, load, export data.
+- Available in java, python, go, c#, ruby, node.js, PHP etc.
+
+Simple Data warehouse application- Big Query
+Extract-> cloud_storage -> transform & load -> Big query -> Visualize -> data studio.
+
+Bug query- [practice]- Creation of dataset and tables
+- Creation of dataset and table through different options
+  - GCP console / BigQuery Editor
+  - DDL scripts (SQL)
+  - Command Line Interface (CLI- cloud shell in this case)
+  - Big Query API- clinet libraries (using python in this demo)
+
+I. Open console - Big query-
+- Create dataset
+- Create table
+  - choose project
+  - choose dataset
+  - give tablename
+  - schema
+    -edit as text : {key:value} --> needs to be passed.
+    or
+    - schema: {edit as text} --> type : mode
+  -create table
+
+II. Create dataset & table via sql query-
+- create dataset-
+  -> Create schema dataset_first_sql OPTIONS (location='us-central1');
+- create table-
+  -> create table demo_dataset_sql.greenhouse_dtls (
+      year string, col2 string, col3 integer
+    )
+    Options (
+      expiration_timestamp= TIMESTAMP "2023-01-01 00:00:00 UTC",
+      description = "a table that expires in 2023"
+    );
+
+III. Create dataset & table via CLI (bq tool)-
+- create dataset-
+  -> bq --location=asia-south2 mk \
+    --dataset \
+    --default_table_expiration=3600 \
+    --description= "this is demo dataset" \
+    <project_id>:<dataset_id>
+- create table-
+  -> bq mk\
+    --table \
+    -- expiration 3600\
+    -- description "This is my table" \
+    <dataset_id>.<table_name> \
+  year:string, col1:string, col2:Int64, data_value:float64
