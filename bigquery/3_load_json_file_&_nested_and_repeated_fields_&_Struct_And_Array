@@ -1,0 +1,103 @@
+Load data into BigQuery
+  - Json fromat data
+  - Nested/Repeated fields
+  - Load data using different options
+
+Big Query with JSON Nested data-
+  - BigQuery performs best when your data is denormalized
+  - Nested fields- Struct (Record type)
+  - Repeated fields- Array(similar data types)
+  - Use combination of nested and repeated columns to denormalize data without impacting relational model and performance
+
+  Example:
+  
+  Nested Record:
+    {
+      'product_name': 'iphone6s',
+      'sold_qty': 2,
+      'sold_date': '2022-01-18',
+      'product_dtls': [
+        {
+          'product_type': 'mobile_phone',
+          'price': 4500,
+          'color': 'grey',
+          'mfd_year': 2021
+        }
+      ]
+    }
+
+  Repeated field array of record and Array of similar data types:
+    {
+      'player_name': 'butler',
+      'team': 'HR',
+      'performance': [
+        {'match_no':1, 'run_scored':75,'wickets':'not_bowled'},
+        {'match_no':2, 'run_scored':80,'wickets':'1'}
+      ],
+      'previous_3_ipl_batting_avg': [32.3, 41.1, 28.6]
+    }
+    
+    Here, 'previous_3_ipl_batting_avg': [32.3, 41.1, 28.6] is Repeated array of similar data types
+    
+    And,  [
+        {'match_no':1, 'run_scored':75,'wickets':'not_bowled'},
+        {'match_no':2, 'run_scored':80,'wickets':'1'}
+      ] 
+    is nested and repeated Array of records
+
+Approach- 
+  Load Json nested data into BigQuery (Batch Load)
+    - GCP console (upload method)
+    - Python BigQuery API
+
+I. via GCP console-
+  - select dataset
+  - create table
+    - from: Google Cloud Storage
+    - select file from GCS bucket: location
+    - file format: JSONL(Newline delimited JSON)
+    - table_name
+    - schema: (auto-detect)
+  -click create table
+
+II. via Python BigQuery API-
+  considering Json file already available in GCS bucket
+  file: bq_load_sjon_data.py
+
+    from google.cloud import bigquery
+    client = bigquery.Client()
+    table_id = "<project_id>.<dataset_id>.table_name"
+
+    job_config = bigquery.LoadjJobConfig(
+      schema = [
+        bigquery.SchemaField("product_name","STRING"),
+        bigquery.SchemaField("sold_qty","INTEGER"),
+        bigquery.SchemaField("sold_date","DATE"),
+        bigquery.SchemaField("product_dtls", "RECORD", 
+            fields= (
+              bigquery.SchemaField("product_type","STRING"),
+              bigquery.SchemaField("price", "FLOAT"),
+              bigquery.SchemaField("color","STRING"),
+              bigquery.SchemaField("mfd_year","INTEGER")
+            )
+        )
+      ],
+      write_description= bigquery.writeDisposition.WRITE_TRUNCATE,
+      source_format= bigquery.SourceFormat.NEWLINE_DELIMITED_JSON
+    )
+
+    uri = "gs://<project_id>/location_file.json"
+
+    load_job = client.load_table_from_uri(
+      uri,
+      table_id,
+      location = "asia-south1",
+      job_config= job_config
+    )
+    load_job.result()
+
+    destination_table= client.get_table(table_id)
+    print("{} table has been create and loaded {} rows".format(table_id, destination_table.num_rows))
+
+##from cloud shell:
+run> python3 bq_load_sjon_data.py
