@@ -1,0 +1,86 @@
+Load data into BigQuery using-
+- GCP console
+- bq command line tool
+- Python Big Query API
+
+Load data into BigQuery - different types
+- Support different methods to load data into BigQuery.
+  - Batch Load
+  - Streaming data load
+  - Generated data
+  - Third party application using connectors
+
+BigQuery - Batch data loading
+
+- Permissions to load data to BigQuery
+  - bigquery.tables.create
+  - bigquery.tables.updateData
+  - bigquery.tables.update
+  - bigquery.jobs.create
+
+- Predefined roles include these permissions
+    - roles/bigquery.dataeditor
+    - roles/bigquery.dataowner
+    - roles/bigquery.admin (includes the bigquery.jobs.create.permission)
+    - bigquery.user (includes the bigquery.jobs.create permission)
+
+- Batch load supported file formats-
+  - Avro
+  - csv
+  - json
+  - ORC
+  - Parquet
+
+- Load data into BigQuery-
+  - GCP console (upload method)
+  - bq command line tool
+  - Python BigQuery API
+
+I. via GCP console- BigQuery
+  - Go to dataset
+    -create table
+      -create table from: upload
+      - select file
+      - file format
+      - Project
+      - Dataset
+      - Table
+      - Table type: Native table
+      - Schema: autodetect
+      - Write preference : Write if empty
+      - Field delimiter- comma
+      - Header rows to skip: 0 or 1
+    -click Create Table
+
+II. from command line tool bq
+  -> bg load\
+    --source _format=csv \
+    --skip_leading_rows=1 \
+    <project_id>:<demo_dataset_id>.table_name \
+    /<local_file_syste_cloudshell>/<target_file.csv>
+
+III. Python BigQuery API
+
+file: bq_dataload_api.py
+
+  from google.cloud import bigquery
+  client = bigquery.Client()
+  table_id = "<project_id>.<dataset_id>.table_name"
+  job_config = bigquery.LoadJobConfig(
+    skip_leading_rows=1,
+    source_format=bigquery.SourceFormat.CSV
+  )
+  
+  uri="gs://<project_id>/file_location.csv"
+  
+  load_job = client.load_table_from_uri(
+    uri,
+    table_id,
+    job_config= job_config
+  )
+  
+  load_job.request()
+  
+  #confirming if table been created
+  destination_table = client.get_table(table_id)
+  print("Loaded {} rows".format(destination_table.num_rows))
