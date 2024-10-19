@@ -1,0 +1,34 @@
+What is authorized view and its use case?
+- Share query results with particular users and groups without giving them access to the underlying tables.
+- Use the views SQL query to restrict the columns (fields) the users are able to query
+- Source tables and view should be in different dataset.
+- Grant necessary IAM roles to user at project and dataset level.
+- Authorize view from source dataset.
+
+BigQuery Data Viewer-------> Dataset: shared_views -------->  view:service_requests_analyst_view ---authorized_view--->Dataset: (source_dataset)
+
+Steps-
+Create a separate dataset (new), to store max views query source dataset
+e.g- Share_view
+query->
+Create or replace view share_view.share_view_demo
+as
+Select
+  symbol,
+  description,
+  sector
+from
+  'project_id.dataset_id.table_name';
+
+- Now above views have been create on view dataset, provide access to these views to required user_emails/ groups. and provide BigQuery user role.
+- above will be done via Iam admin.
+- On view dataset, share-> permissions-> BigQuery Data Viewer (role) {provide this}.
+
+- Even if user have access to view dataset, he will not be able to access view table.
+
+- Go to main tables dataset (source dataset), from original owner account-
+  - share
+    - Authorized view
+      - give (view name)
+    <> this way, view will have access to dataset
+    & user access to view, can access query according to view columns.
