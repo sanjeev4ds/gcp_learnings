@@ -84,3 +84,6 @@ file: bq_dataload_api.py
   #confirming if table been created
   destination_table = client.get_table(table_id)
   print("Loaded {} rows".format(destination_table.num_rows))
+
+##from cloud shell:
+run> python3 bq_dataload_api.py
