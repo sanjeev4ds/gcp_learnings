@@ -15,6 +15,9 @@ I. via console:
       D. give schema, two ways for same:
         - via field name and type and mode (UI)
         - via edit as text -> here pass, key: value
+  d. even later we can alter table schema as well using json field with updated fields, but make sure required needs to be present in new schema file
+    command used:
+    bq update --table sanjeevyoutubefirstapi:pactice_dataset_1.frist_table_from_console bigquery_practice/json_schema_table_update.json
 
 II. via bigquery Query:
   a. open bigquery
