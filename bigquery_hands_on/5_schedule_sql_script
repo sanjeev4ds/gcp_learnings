@@ -1,0 +1,43 @@
+1. create a query, to schedule
+2. create a dataset and a table to save the result for above scheduled query
+3. now schedule a scheduled_query, and place destination as table create in point 2.
+
+steps:
+
+1. Query to schedule, contains metadata information about different tables available in dataset
+  query:
+  select 
+    dataset_id,
+    table_id,
+    TIMESTAMP_MILLIS(last_modified_time) as last_modified_time,
+    row_count,
+    size_bytes
+  from practice_dataset_2_console.__TABLES__;
+
+2. save the above query.
+  query will be available in section:
+    Queries:
+      shared queries:
+        your_query
+
+  ref- https://drive.google.com/file/d/1gvtuIvod0T9Gng2SN27sly7GI1SWhsWF/view?usp=drive_link
+
+3. Once query is saved successfully.
+
+4. create a dataset and a table to store the result for the query created above.
+  Note: Keep it empty initially (while creating a table)
+
+5. Schedule a query create in step 3, 
+  a. give schedule name for the query,
+  b. choose exact query to be scheduled.
+  c. provide destination dataset
+  d. provide destination table
+  e. provide dataset location
+  f. Destination table write preference: Append table
+  g. save
+
+6. Go to Scheduled Queries
+  a. Check Query result
+  b. check table data of destination
+
+ref- https://drive.google.com/file/d/10lTO9dKk_zi-TKVE9aMST2GmUCPbuinz/view?usp=drive_link
