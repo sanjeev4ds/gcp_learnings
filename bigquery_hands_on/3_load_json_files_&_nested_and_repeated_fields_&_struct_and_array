@@ -1,0 +1,81 @@
+Two ways to load JSON nested data:
+  1. via GCP console
+  2. via Python bigquery API
+
+I. via GCP console:
+  
+  a. Its important to undertsand about below:
+    Newline Delimited JSON:
+      If you're loading multiple records from a file, the correct format is newline-delimited JSON, ?
+      where each JSON object is on a new line:
+      json:
+      {"product_name": "iphone6s", "sold_qty": 2, "sold_date": "2022-01-18", "product_dtls": [{"product_type": "mobile_phone", "price": 4500, "color": "grey", "mfd_year": 2021}]}
+      {"product_name": "iphone6", "sold_qty": 1, "sold_date": "2022-01-19", "product_dtls"
+  
+  b. save json file in gcp bucket:
+  c. go to project
+  d. right click on dataset
+  e. create table (repeated)
+    i. from: google cloud storage
+    ii. select file from GCS bucket: file_name.json
+        (e.g: gs://practice_bucket_sanjeev_1/json_data/bigquery_hands_on/repeated_fileds.json)
+    iii. file format: JSONL (newline delimited JSON)
+    iv. table name
+    v. schema: auto-detect
+  f. create table
+  g. check schema received on table, repeated field have multiple columns inside, 
+    link: https://drive.google.com/file/d/1VePFqQwOfIc-P4GznKz1s-x-Zcd_lMpm/view?usp=drive_link
+  
+  h. create one more table (repeated field of different data type & array of similar data type)
+    i. all steps are similar to above
+  i. check schema received on table
+    link: https://drive.google.com/file/d/1BUXzPLIfhsj04PDrQ490m_5_Zr9e_4aG/view?usp=drive_link
+
+II. via python BigQuery API:
+  a. create a .py file
+    File: bq_load_json_data.py
+  #create and load data in single file
+  from google.cloud import bigquery
+  
+  client = bigquery.Client()
+  
+  table_id = "sanjeevyoutubefirstapi.practice_dataset_1_api.from_api_code"
+  table_schema = [
+      bigquery.SchemaField("product_name","STRING"),
+      bigquery.SchemaField("sold_qty","INTEGER"),
+      bigquery.SchemaField("sold_date","DATE"),
+      bigquery.SchemaField(
+          "product_dtls",
+          "RECORD",
+          mode="REPEATED",
+          fields=(
+              bigquery.SchemaField("product_type","STRING"),
+              bigquery.SchemaField("price","FLOAT"),
+              bigquery.SchemaField("color","STRING"),
+              bigquery.SchemaField("mfd_year","INTEGER")
+          )
+      ),
+  ]
+  
+  job_config = bigquery.LoadJobConfig(
+      schema= table_schema,
+      write_disposition = bigquery.WriteDisposition.WRITE_TRUNCATE,
+      source_format = bigquery.SourceFormat.NEWLINE_DELIMITED_JSON
+  )
+  
+  uri = "gs://practice_bucket_sanjeev_1/json_data/bigquery_hands_on/repeated_fileds.json"
+  
+  load_job = client.load_table_from_uri(
+      uri,
+      table_id,
+      location="asia-south1",
+      job_config=job_config
+  )
+  
+  load_job.result()
+  destination_table = client.get_table(table_id)
+  print("Loaded {} rows".format(destination_table.num_rows))
+
+  b. make sure do write a new table name in table_id otherwise it will override previous data if created table with same name
+  c. run command in cloud shell
+    command used: python3 /home/saini07_sanjeev/bigquery_practice/bq_load_json_data.py
