@@ -1,0 +1,110 @@
+Four ways to create dataset and tables-
+  1. console (UI)
+  2. bigquery query
+  3. bq tool (CLI)
+  4. python api (client api)
+
+I. via console:
+  a. open bigquery console.
+  b. create a dataset
+  c. right click on dataset
+    i. create table
+      A.choose project
+      B. choose dataset
+      C. give tablename
+      D. give schema, two ways for same:
+        - via field name and type and mode (UI)
+        - via edit as text -> here pass, key: value
+
+II. via bigquery Query:
+  a. open bigquery
+  b. new query
+  c. for creating dataset,
+    query:
+    -- create dataset
+    Create schema practice_dataset_2_via_query
+    options (
+      location='asia-south-2'
+    );
+  d. for creating table,
+    query:
+    -- create table
+    create table practice_dataset_2_via_query.practice_table_1_via_query 
+    (
+      order_id integer,
+      customer_id integer,
+      order_status integer,
+      order_date date,
+      required_date date,
+      shipped_date date,
+      store_id integer,
+      staff_id integer
+    )
+    options(
+      expiration_timestamp= TIMESTAMP "2025-01-01 00:00:00 UTC",
+      description= "table that expires in 2025"
+    );
+
+  III. via bq tool (CLI):
+    a. open cloud shell
+    b. for creating dataset,
+      command used:
+      bq --location=asia-south2 mk \
+      --dataset \
+      --default_table_expiration=3600 \
+      --description="this is demo dataset" \
+      sanjeevyoutubefirstapi:practice_dataset_1_via_bq
+    c. for creating table,
+      command used:
+      bq mk \
+      --table \
+      --expiration 3600 \
+      --description "This is my table"\
+      practice_dataset_1_via_bq.practice_table_1_via_bq
+
+    d. alter table schema
+      command used:
+      bq update --table sanjeevyoutubefirstapi:practice_dataset_1_via_bq.practice_table_1_via_bq \
+      order_id:integer,customer_id:integer,order_status:integer,order_date:date,required_date:date,shipped_date:date,store_id:integer,staff_id:integer
+
+  IV. via python API:
+    a. create .py file
+      file: bq_create_data_table_api.py
+      
+    b. open cloud shell
+    c. connect to gcloud project
+      command used: gcloud config set project sanjeevyoutubefirstapi
+    d. install bigquery library
+      command used: pip3 install google-cloud-bigquery
+    e. create directory for python file
+      command used: mkdir bigquery_practice
+    f. from cloud shell editor create a file in this above directory
+      file: bq_create_dataset_table_api.py
+      
+      from google.cloud import bigquery
+
+      client = bigquery.Client()
+      
+      dataset_id = "{}.practice_dataset_1_api".format(client.project)
+      dataset = bigquery.Dataset(dataset_id)
+      dataset.location= "asia-south1"
+      dataset = client.create_dataset(dataset=dataset, timeout=30) #make an API request to create dataset
+      print("created dataset {}.{}".format(client.project, dataset.dataset_id))
+      
+      table_schema = [
+          bigquery.SchemaField("order_id","integer",mode="NULLABLE"),
+          bigquery.SchemaField("customer_id","integer",mode="NULLABLE"),
+          bigquery.SchemaField("order_status","integer",mode="NULLABLE"),
+          bigquery.SchemaField("order_date","date",mode="NULLABLE"),
+          bigquery.SchemaField("required_date","date",mode="NULLABLE"),
+          bigquery.SchemaField("shipped_date","date",mode="NULLABLE"),
+          bigquery.SchemaField("store_id","integer",mode="NULLABLE"),
+          bigquery.SchemaField("staff_id","integer",mode="NULLABLE")
+      ]
+      table_id = "{}.bike_orders".format(dataset_id)
+      table = bigquery.Table(table_id,schema=table_schema)
+      table= client.create_table(table) #make an API request to create table
+      
+      print("Create table {}.{}.{}".format(table.project,table.dataset_id,table.table_id))
+    g. run command in cloud shell
+      command used: python3 bq_create_dataset_table_api.py
