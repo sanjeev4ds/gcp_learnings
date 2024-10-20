@@ -1,0 +1,37 @@
+Exam guide:
+https://services.google.com/fh/files/misc/professional_data_engineer_exam_guide_english.pdf
+
+Section 5: Maintaining and automating data workloads (~18% of the exam)
+  5.1 Optimizing resources. 
+  5.2 Designing automation and repeatability.
+  5.3 Organizing workloads based on business requirements.
+  5.4 Monitoring and troubleshooting processes.
+  5.5 Maintaining awareness of failures and mitigating impact.
+
+Section 5: Maintaining and automating data workloads (~18% of the exam)
+
+5.1 Optimizing resources. Considerations include:
+  ● Minimizing costs per required business need for data
+  ● Ensuring that enough resources are available for business-critical data processes
+  ● Deciding between persistent or job-based data clusters (e.g., Dataproc)
+
+5.2 Designing automation and repeatability. Considerations include:
+  ● Creating directed acyclic graphs (DAGs) for Cloud Composer
+  ● Scheduling jobs in a repeatable way
+
+5.3 Organizing workloads based on business requirements. Considerations include:
+  ● Flex, on-demand, and flat rate slot pricing (index on flexibility or fixed capacity)
+  ● Interactive or batch query jobs
+
+5.4 Monitoring and troubleshooting processes. Considerations include:
+  ● Observability of data processes (e.g., Cloud Monitoring, Cloud Logging, BigQuery
+    admin panel)
+  ● Monitoring planned usage
+  ● Troubleshooting error messages, billing issues, and quotas
+  ● Manage workloads, such as jobs, queries, and compute capacity (reservations)
+
+5.5 Maintaining awareness of failures and mitigating impact. Considerations include:
+  ● Designing system for fault tolerance and managing restarts
+  ● Running jobs in multiple regions or zones
+  ● Preparing for data corruption and missing data
+  ● Data replication and failover (e.g., Cloud SQL, Redis clusters)
