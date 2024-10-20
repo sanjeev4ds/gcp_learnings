@@ -1,0 +1,41 @@
+Exam guide:
+https://services.google.com/fh/files/misc/professional_data_engineer_exam_guide_english.pdf
+
+Section 1: Designing data processing systems (~22% of the exam)
+  1.1 Designing for security and compliance.
+  1.2 Designing for reliability and fidelity.
+  1.3 Designing for flexibility and portability. 
+  1.4 Designing data migrations.
+
+
+Section 1: Designing data processing systems (~22% of the exam)
+
+1.1 Designing for security and compliance. Considerations include:
+  ● Identity and Access Management (e.g., Cloud IAM and organization policies)
+  ● Data security (encryption and key management)
+  ● Privacy (e.g., personally identifiable information, and Cloud Data Loss Prevention API)
+  ● Regional considerations (data sovereignty) for data access and storage
+  ● Legal and regulatory compliance
+
+1.2 Designing for reliability and fidelity. Considerations include:
+  ● Preparing and cleaning data (e.g., Dataprep, Dataflow, and Cloud Data Fusion)
+  ● Monitoring and orchestration of data pipelines
+  ● Disaster recovery and fault tolerance
+  ● Making decisions related to ACID (atomicity, consistency, isolation, and durability)
+    compliance and availability
+  ● Data validation
+
+1.3 Designing for flexibility and portability. Considerations include:
+  ● Mapping current and future business requirements to the architecture
+  ● Designing for data and application portability (e.g., multi-cloud and data residency
+    requirements)
+  ● Data staging, cataloging, and discovery (data governance)
+
+1.4 Designing data migrations. Considerations include:
+  ● Analyzing current stakeholder needs, users, processes, and technologies and creating
+    a plan to get to desired state
+  ● Planning migration to Google Cloud (e.g., BigQuery Data Transfer Service, Database
+    Migration Service, Transfer Appliance, Google Cloud networking, Datastream)
+  ● Designing the migration validation strategy
+  ● Designing the project, dataset, and table architecture to ensure proper data
+    governance
