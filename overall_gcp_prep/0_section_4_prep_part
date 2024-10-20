@@ -1,0 +1,27 @@
+Exam guide:
+https://services.google.com/fh/files/misc/professional_data_engineer_exam_guide_english.pdf
+
+Section 4: Preparing and using data for analysis (~15% of the exam)
+  4.1 Preparing data for visualization.
+  4.2 Sharing data.
+  4.3 Exploring and analyzing data.
+
+Section 4: Preparing and using data for analysis (~15% of the exam)
+
+4.1 Preparing data for visualization. Considerations include:
+  ● Connecting to tools
+  ● Precalculating fields
+  ● BigQuery materialized views (view logic)
+  ● Determining granularity of time data
+  ● Troubleshooting poor performing queries
+  ● Identity and Access Management (IAM) and Cloud Data Loss Prevention (Cloud DLP)
+
+4.2 Sharing data. Considerations include:
+  ● Defining rules to share data
+  ● Publishing datasets
+  ● Publishing reports and visualizations
+  ● Analytics Hub
+
+4.3 Exploring and analyzing data. Considerations include:
+  ● Preparing data for feature engineering (training and serving machine learning models)
+  ● Conducting data discovery
