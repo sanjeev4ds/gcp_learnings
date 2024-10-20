@@ -1,0 +1,89 @@
+3 ways to load data into bigquery-
+  1. GCP console
+  2. bg command line tool
+  3. Python BigQuery API
+
+I. via GCP console:
+  a. Open project
+  b. open dataset
+  c. right click on dataset
+    i. create table
+    ii. table from upload
+    iii. select file (from local)==> orders.csv
+    iv. file format (CSV)
+    v. project
+    vi. dataset
+    vii. table_name: table_created_ui_console_from_upload
+    viii. schema: auto detect
+    iX. write preference: Write if empty
+    x. field delimiter: comma
+    xi. Header rows to skip 1 (if first row consists, headers in CSV file)
+  d. create table
+
+II. via bq tool:
+  a. as earlier table, was expired, again creating table first,
+    command used:
+    bq mk \
+      --table \
+      --expiration 3600 \
+      --description "This is my table"\
+      practice_dataset_1_via_bq.practice_table_1_via_bq
+  b. schema json file needs to be place in local cloud shell:
+    file: json_schema_table_update.json
+    [
+        {"name": "order_id", "type": "integer"},
+        {"name": "customer_id", "type": "integer"},
+        {"name": "order_status", "type": "integer"},
+        {"name": "order_date", "type": "date"},
+        {"name": "required_date", "type": "date"},
+        {"name": "shipped_date", "type": "string"},
+        {"name": "store_id", "type": "integer"},
+        {"name": "staff_id", "type": "integer"}
+    ]  
+  c. loading data into already created table:
+    command used:
+    bq load \
+    --source_format=CSV \
+    --schema /home/saini07_sanjeev/bigquery_practice/json_schema_table_update.json \
+    --skip_leading_rows=1 \
+    sanjeevyoutubefirstapi:practice_dataset_1_via_bq.practice_table_1_via_bq \
+    /home/saini07_sanjeev/bigquery_practice/orders.csv
+
+III. via python API:
+  a. create .py file
+    file: bq_create_data_table_api.py
+    
+    from google.cloud import bigquery
+    
+    client= bigquery.Client()
+    
+    table_id = "sanjeevyoutubefirstapi.practice_dataset_1_api.bike_orders"
+    
+    job_config = bigquery.LoadJobConfig(
+        skip_leading_rows=1,    # Skip the header row
+        source_format= bigquery.SourceFormat.CSV,
+        null_marker='NULL'  # Handle NULL values as specified
+    )
+    
+    uri = "gs://practice_bucket_sanjeev_1/bikes_data/bikes_relational_dataset/orders.csv"
+    
+    load_job = client.load_table_from_uri(
+        uri,
+        table_id,
+        job_config=job_config
+    )
+    
+    load_job.result()
+    
+    #confirmation
+    destination_table = client.get_table(table_id)
+    print("Loaded {} rows".format(destination_table.num_rows))
+
+  b. From above cove we can observe we are not passing any schema parameter while loading job,
+    as loading into table with schema earlier already defined may conflict if we pass autodetect=True in config,
+    e.g job_config = bigquery.LoadJobConfig( autodetect=True)
+  c. Also in our data, we have NULL in few rows which actually mean Null,
+     but as currently it seems to be string "NULL" so we need to handle this, with null_marker='NULL'
+    e.g job_config = bigquery.LoadJobConfig( null_marker='NULL')
+  d. run command in cloud shell
+      command used: python3 /home/saini07_sanjeev/bigquery_practice/bq_dataload_api.py
