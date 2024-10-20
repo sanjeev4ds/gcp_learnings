@@ -1,0 +1,82 @@
+1. Source dataset will contain one table
+2. On this source_dataset table, we will create on view (using select query on limited columns) in view_dataset, and provide an access to any user to use this view.
+3. User will be able to query the view, (if they have access to authorized_views)
+4. Even user have permissions on view, then also he may not be able to query.
+5. Provide an access on source_dateset to authorized_view (present in view_dataset).
+6. using above all steps, there will no access issues.
+
+Steps:
+
+1. Created one table in source dataset i.e bike_orders and loaded data from CSV file present in GCS, below script used.
+  File: file_1_create_table_schema_and_load_data_from_gcs_bucket.py
+  from google.cloud import bigquery
+  client = bigquery.Client()
+  dataset_id = "{}.source_dataset".format(client.project)
+  table_schema = [
+      bigquery.SchemaField("order_id","integer",mode="NULLABLE"),
+      bigquery.SchemaField("customer_id","integer",mode="NULLABLE"),
+      bigquery.SchemaField("order_status","integer",mode="NULLABLE"),
+      bigquery.SchemaField("order_date","date",mode="NULLABLE"),
+      bigquery.SchemaField("required_date","date",mode="NULLABLE"),
+      bigquery.SchemaField("shipped_date","date",mode="NULLABLE"),
+      bigquery.SchemaField("store_id","integer",mode="NULLABLE"),
+      bigquery.SchemaField("staff_id","integer",mode="NULLABLE")
+  ]
+  
+  table_id = "{}.bike_orders".format(dataset_id)
+  table = bigquery.Table(table_id, schema= table_schema)
+  table = client.create_table(table) #make an API request to create table
+  
+  #confirmation if table created
+  print(
+      "Create table {}.{}.{}".format(
+          table.project,
+          table.dataset_id,
+          table.table_id
+      )
+  )
+  
+  #load data from gcs to created table,
+  
+  job_config = bigquery.LoadJobConfig(
+      skip_leading_rows = 1,
+      source_format= bigquery.SourceFormat.CSV,
+      null_marker= 'NULL'
+  )
+  
+  uri = "gs://practice_bucket_sanjeev_1/bikes_data/bikes_relational_dataset/orders.csv"
+  
+  load_job = client.load_table_from_uri(
+      uri,
+      table_id,
+      job_config= job_config
+  )
+  
+  load_job.result()
+  
+  #confirmation if data loaded
+  destination_table = client.get_table(table_id)
+  print("Loaded {} rows".format(destination_table.num_rows))
+
+2. Create a view of above table on view_dataset using limited columns only, 
+  Below script ran on query:
+    query:
+      Create or Replace view view_dataset.share_view
+      as
+      SELECT customer_id, order_date
+      FROM `sanjeevyoutubefirstapi.source_dataset.bike_orders`;
+
+3. This authorized view, should have permission to read on source_dataset.
+  a. open source_dataset in new tab
+  b. Share access to authorized views
+  c. search exact view name present in any other dataset
+  d. This way linkage will be complete for permissions to authorized_view to source_dataset.
+
+4. Give permissions to user: (analysts, data-scientists etc), to view_dataset only.
+
+5. Copy the url of share_view, give it to users,
+  a. Once they login
+  b. they will have to use this url
+  c. bigquery console will automatically open, already added this view_dataset_project there.
+  d. and user can easily query on data available in share_view.
+    ref- https://drive.google.com/file/d/1m9Eg4oaUEYBVIXetOEtNMpK9RNBDU24b/view?usp=drive_link
