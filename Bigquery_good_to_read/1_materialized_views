@@ -1,0 +1,37 @@
+Example-
+You need to look at BigQuery data from a specific table multiple times a day.
+The underlying table you are querying is several petabytes in size, 
+but you want to filter your data and provide simple aggregations to downstream users. 
+You want to run queries faster and get up to date insights quicker.What should you do?
+
+Answer: Create a materialized view based off of the query being run on.
+
+Learn more about materialized view-
+
+In BigQuery, materialized views are precomputed views that periodically cache the results of a query for increased performance and efficiency. 
+BigQuery leverages precomputed results from materialized views and whenever possible reads only changes from the base tables to compute up-to-date results. 
+Materialized views can be queried directly or can be used by the BigQuery optimizer to process queries to the base tables.
+
+Queries that use materialized views are generally faster and consume fewer resources than queries that retrieve the same data only from the base tables. 
+Materialized views can significantly improve the performance of workloads that have the characteristic of common and repeated queries.
+
+The following are key characteristics of materialized views:
+
+- Zero maintenance. Materialized views are precomputed in the background when the base tables change. 
+  Any incremental data changes from the base tables are automatically added to the materialized views, with no user action required.
+  Fresh data. Materialized views return fresh data. If changes to base tables might invalidate the materialized view, then data is read directly from the base tables. 
+  If the changes to the base tables don't invalidate the materialized view, then rest of the data is read from the materialized view and only the changes are read from the base tables.
+
+- Smart tuning. If any part of a query against the base table can be resolved by querying the materialized view, then BigQuery reroutes the query to use the materialized view for better performance and efficiency.
+  Use cases
+
+- Materialized views can optimize queries with high computation cost and small dataset results. 
+  Processes that benefit from materialized views include online analytical processing (OLAP) operations that require significant processing with predictable 
+  and repeated queries like those in from extract, transform, load (ETL) processes or business intelligence (BI) pipelines.
+
+The following use cases highlight the value of materialized views. Materialized views can improve query performance if you frequently require the following:
+
+-  Pre-aggregate data. Aggregation of streaming data.
+-  Pre-filter data. Run queries that only read a particular subset of the table.
+-  Pre-join data. Query joins, especially between large and small tables.
+-  Recluster data. Run queries that would benefit from a clustering scheme that differs from the base tables.
