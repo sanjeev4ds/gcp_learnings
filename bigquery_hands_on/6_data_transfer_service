@@ -1,0 +1,33 @@
+Two ways to access data transfer service-
+1. bq command line tool
+2. BigQuery Data Transfer API
+
+basic understanding-
+
+other cloud storages  ---->
+Saas Apps             ---->  ---->   Big Query Data Transfer ----> Big Query
+Data Warehouses       ---->
+
+
+I. using Data Transfer
+  a. As result data needs to be transfered in bigquery->project->dataset->table.
+  b. Created a new dataset.
+  c. Created a new table bike_orders
+  d. Place a file in gcs bucket- orders.csv
+  e. Now create a Data transfer request
+    i. Source: gcs
+    ii. Schedule option: on-demand
+    iii. destination settings: dataset_name
+    iv. gcs storage uri: path_to_csv_location
+    v. write preference: append
+    vi. File format: CSV
+      - File delimiter: ,
+      - Quote character: '
+      - Header rows to skip: 1
+    vii. Save
+  result-> this request basically load data into bigquery table from gcs bucket orders.csv file
+  
+  ref, data transfer request: https://drive.google.com/file/d/1tQOPg1AJiMj5_8sCYkuw4ZPjQ5MuiWL0/view?usp=drive_link
+  ref, data dumped to table: https://drive.google.com/file/d/11IyAKoq-9cr0E8ZBitIqNeWdboTBliHA/view?usp=drive_link
+
+II. in next session
