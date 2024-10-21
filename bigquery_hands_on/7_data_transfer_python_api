@@ -1,0 +1,55 @@
+Previously discussed on data transfer using two ways, 
+first- data transfer (from UI)
+second- python API
+
+In this session will cover second part-
+
+II. Data transfer via Data Transfer API- python
+
+  a. Create a new dataset which will act as destination_dataset
+  b. There should be one source dataset having one table atleast to proceed with data transfer
+  c. Create a gservice account to automate the things
+  d. Give required permissions to this service account- e.g role: BigQuery Admin, Service Usage Consumer
+  e. Go to service account, add new security key, download it locally into json format
+  f. Save this locally available security key, into cloud shell local path, using upload option
+  g. To provide proper access to gservice account, we need to export the credentials,
+    use below command-
+      export GOOGLE_APPLICATION_CREDENTIALS= "/path/to/file,csv/
+  h. create a file in cloud shell local path
+    file: copy_dataset.py
+      # problem statement is to copy one dataset to another dataset (data transfer)
+      
+      from google.cloud import bigquery_datatransfer_v1
+      
+      project_id= "sanjeevyoutubefirstapi"
+      
+      source_dataset_id = "data_transfer_dataset"
+      
+      destination_dataset_id = "destination_dataset"
+      
+      transfer_config = bigquery_datatransfer_v1.TransferConfig(
+          destination_dataset_id=destination_dataset_id,
+          display_name="copy_dataset_via_python_api",
+          data_source_id="cross_region_copy",
+          params= {
+              "source_project_id":project_id,
+              "source_dataset_id":source_dataset_id
+          },
+          schedule="every 24 hours"
+      )
+      
+      transfer_client = bigquery_datatransfer_v1.DataTransferServiceClient()
+      
+      transfer_config = transfer_client.create_transfer_config(
+          parent=transfer_client.common_project_path(project_id),
+          transfer_config=transfer_config
+      )
+      
+      print(f"Created transfer config: {transfer_config.name}")
+
+  i.run command in cloud shell
+    command used: python3 /path/to/copy_dataset.py
+
+  j. After ran successfully, the data transfer request will be visible-
+    ref, transfer request: https://drive.google.com/file/d/1sCNCTAqY2HIBguBoJlxlPwP-ULxQ_y4u/view?usp=drive_link
+    ref, data transfered to destination dataset:  https://drive.google.com/file/d/1N3WBcYZpcbAKSDWDxN0ulaDwKqaBazXc/view?usp=drive_link
