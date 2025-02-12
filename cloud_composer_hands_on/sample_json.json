@@ -1,0 +1,8 @@
+{
+  "key1": {
+    "key_nested_1": "value_nested_1",
+    "key_nested_2": {
+      "key_nested_nested_1": "value_nested_nested_1"
+    }
+  }
+}
